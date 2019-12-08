@@ -1,4 +1,6 @@
-from itertools import product
+from itertools import product, permutations
+from queue import Queue
+import threading
 
 def read_opcode(opcode):
     num_prs = 0
@@ -25,9 +27,8 @@ def read_mode(code, pr, mode):
     return ret        
 
 
-def process(code, inpt):
+def process(code, inpts, ins_ptr):
     outs = []
-    ins_ptr = 0
     while True:
         op, modes = read_opcode(code[ins_ptr])
         if op == 1:
@@ -40,11 +41,15 @@ def process(code, inpt):
             ins_ptr += 4
         elif op == 3:
             # accept input
-            code[code[ins_ptr+1]] = inpt
-            ins_ptr += 2
+            if len(inpts) > 0:
+                inpt = inpts.pop(0)
+                code[code[ins_ptr+1]] = inpt    
+                ins_ptr += 2
+            else:
+                return outs, ins_ptr, False
         elif op == 4:
             # emit output
-            outs += [read_mode(code, ins_ptr+1, modes[0])]
+            outs.append(read_mode(code, ins_ptr+1, modes[0]))
             ins_ptr += 2
         elif op == 5:
             # jump if true
@@ -79,21 +84,51 @@ def process(code, inpt):
                 code[code[ins_ptr+3]] = 0    
             ins_ptr += 4    
         elif op == 99:
-            print("finished processsing code: ", outs, code)
-            return 
-    print("finished processing code: ", outs, code)        
-    return 
+            return outs, ins_ptr, True
+    return outs, ins_ptr, True
 
 def test():
-    code = [3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9]
-    print(process(code, 0))
+    orig_code = [3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5]
+    perms = permutations([5,6,7,8,9])
+    best = -1
+    for phase_settings in perms:
+        codes = [[c for c in orig_code] for i in range(5)]
+        inpts = [[] for i in range(5)]
+        for i in range(5):
+            inpts[i].append(phase_settings[i])
+        inpts[0].append(0)
+        ins_ptrs = [0 for i in range(5)]
+        all_done = False
+        while not all_done:
+            all_done = True
+            for i in range(5):
+                outs, ins_ptrs[i], done = process(codes[i], inpts[i], ins_ptrs[i])
+                inpts[(i+1)%5] += outs
+                all_done = done and all_done
+        best = max(best, inpts[0][0])
+    print(best)
 
 def solve():
     with open("input", "r") as f:
         orig_code = [int(el) for el in f.readline().split(",")]
-    print(len(orig_code))
-    print(process(orig_code, 5))
-
+    perms = permutations([5,6,7,8,9])
+    best = -1
+    for phase_settings in perms:
+        codes = [[c for c in orig_code] for i in range(5)]
+        inpts = [[] for i in range(5)]
+        for i in range(5):
+            inpts[i].append(phase_settings[i])
+        inpts[0].append(0)
+        ins_ptrs = [0 for i in range(5)]
+        all_done = False
+        while not all_done:
+            all_done = True
+            for i in range(5):
+                outs, ins_ptrs[i], done = process(codes[i], inpts[i], ins_ptrs[i])
+                inpts[(i+1)%5] += outs
+                all_done = done and all_done
+        best = max(best, inpts[0][0])
+    print(best)
 
 if __name__ == "__main__":
    solve()
