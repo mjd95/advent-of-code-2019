@@ -1,3 +1,8 @@
+from math import gcd
+
+def lcm(a, b):
+    return abs(a*b) // gcd(a,b)
+
 def get_velocity(idx, coord, cur_vel, positions):
     vel = cur_vel
     for i in range(len(positions)):
@@ -17,38 +22,24 @@ def solve():
 
     velocities = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
 
-    print(f"after time 0, positions {positions}, velocities {velocities}")
-
-    seen = {tuple(tuple(p) for p in positions+velocities)}
-    ts = 0
-    while True:
-       # apply gravity
-        for i in range(len(velocities)):
-            velocities[i][0] = get_velocity(i, 0, velocities[i][0], positions)
-            velocities[i][1] = get_velocity(i, 1, velocities[i][1], positions)
-            velocities[i][2] = get_velocity(i, 2, velocities[i][2], positions)
-    
-        # apply velocities
-        for i in range(len(positions)):
-            for j in range(3):
+    repeats = []
+    for j in range(3):
+        seen = {tuple(p[j] for p in positions+velocities)}
+        ts = 0
+        while True:
+        # apply gravity
+            for i in range(len(velocities)):
+                velocities[i][j] = get_velocity(i, j, velocities[i][j], positions)
+        
+            # apply velocities
+            for i in range(len(positions)):
                 positions[i][j] += velocities[i][j]
-        ts += 1 
-        cur = tuple(tuple(p) for p in positions+velocities)
-        if cur in seen:
-            print(f"found a repeat!  ts={ts}")
-            return
-
-    print(positions)
-    print(velocities)
-    tot = 0
-    for i in range(len(positions)):
-        pot = 0
-        kin = 0
-        for j in range(3):
-            pot += abs(positions[i][j])
-            kin += abs(velocities[i][j])
-        tot += pot*kin
-    print(tot)
+            ts += 1 
+            cur = tuple(p[j] for p in positions+velocities)
+            if cur in seen:
+                repeats.append(ts)
+                break
+    print(lcm(lcm(repeats[0], repeats[1]), repeats[2]))
 
 if __name__=="__main__":
     solve()
