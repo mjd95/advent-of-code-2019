@@ -1,0 +1,153 @@
+play 1
+w
+infinite loop, don't pick up
+s
+giant electromagnet, pick up
+s
+can't move
+
+play 2
+w
+ignore inifinite loop
+s
+ignore giant electromagnet
+s
+take asterisk
+n
+n
+e
+s
+n
+w
+back at Storage, igore giant electromagnet
+n, ignore infinite loop
+w to Passages
+take photos
+dead
+
+play 3
+w to hot choc fountain
+s to storage, ignore giant electromagnet
+e to warp drive maintenance
+s to gift wrapping centre
+n, w back to storage
+s to arcade
+s to corridor, take asterisk
+n, n, to storage
+n to hot choc fountain
+w to passages, ignore photos
+s to science lab
+take astronaut ice cream
+s to crew quarters
+take polygon
+e to observatory
+take easter egg
+n to kitchen
+take escape pod
+dead
+
+play 4
+as above, but ignore escape pod
+s to observatory
+e to engineering
+take weather machine
+n to security checkpoint
+bounce back, too light (so want to go collect more stuff)
+s to engineering
+w to observatory
+w to crew quarters
+n to science labe
+w to sick bay
+ignore molten lava
+e to science lab
+n to passages
+w to stable
+s to navigation
+take fixed point
+w to hallyway
+take food ration
+e to navigation
+n to stable
+w to holodeck
+take dark matter
+e to stable
+w to holodeck
+e to passage
+s to science lab
+s to crew quarters
+e to observatory
+e to engineering
+n to security checkpoint
+i'm too heavy
+i dropped some stuff and now i'm too light
+dropped everything except the weather machine and i'm too light
+trying a bunch of possibilities
+with everything i'm too heavy
+if i drop only weather machine i'm too heavy
+if i drop weather machine + food ration i'm too heavy
+f i drop weather machine + food ration + ice cream i'm too heavy
+drop weather machine + food ration + ice cream + fied point, too heavy
+drop weather machine + food ration + ice cream + fixed point + easter egg, too heavy
+drop weather machine + food ration + ice cream + fixed point + easter egg + asterisk, too light
+drop weather machine + food ration + ice cream + fixced point + asterisk, too light
+drop weather machine + ice cream + ficed point + asterisk, too light
+drop weather machine + ice cream + fixed point + asterisk + food ration, too light
+
+inv = polygon, easter egg, dark matter.  too light
+inv = polygon, easter egg, dark matter, food ration.  too light
+inv = polygona, easter egg, ice cream, dark matter, food ration.  too light
+inv = polygon, ice cream, easter egg, dark matter, food rationm asterisk.  too heavy.
+inv = ice crema, easter egg, dfark matter, food ration, asterisk.  too heavhy
+inv = polygon, ice cream, dark matter, food ration, asterisk.  too heavy.
+inv = polygon, ice crema,, easter egg, food ration, asterisk.  too heavhy
+inv = polygon, ice cream, easter egg, dark matter, asterisk.  too heavuy
+inv = polygon, ice cream, easter egg, dark matter, fied point, food ration.  too light,
+
+i need to be carrying at least one of weather machine and asterisk.
+
+easter egg
+polygon
+food ration
+astronaut ice cream
+weather machine
+dark matter
+fixed point
+asterisk
+
+2^7 = 128 possibilities
+
+you can definitely get rid of the asterisk, that is too heavy on its own
+everything else is fine
+down to 64 possibilities
+
+pretty sure everything _except_ the weather machine is too light.  testin gthat now
+yes, without the weather machine i am too light
+
+so i must be carrying the weather machine, and i must not carry the asterisk
+down to 32 possibilities
+
+try adding in all one-element subsets on top of weather machine
+as expected, all weather machines + one more thing result in too light
+
+try adding in all (n-1)-element subsets on top of weather machine
+first obvious thing, i'mm too heavy with all of them
+without dark matter, i am too light
+without everything else, i am too heavy
+
+now i know i can't possibly carry the asterisk, i must carry the weather machine, and i also must carry the dark matter.  otherwise, i am too light
+
+down to 16 possibiltiies ithink
+i'll take every one element set on top of weather machine + dark matter
+
+interesting that dark matter + food ration + weather machine is too heavy; this shows i can't possibly carry food ration
+
+all the other one-element sets on top of weather machine + dark matter are too light
+
+try all two element sets on top of weather machine + dark matter that don't meet asterisk or food ration
+
+polygon + fixed point => too light
+polygon + ice cream => too heavy
+polygon + easter egg => too light
+ice cream + fixed point => too heavy
+
+success!
